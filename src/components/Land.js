@@ -17,10 +17,10 @@ const Land = () => {
     document.body.appendChild(renderer.current.domElement);
 
     let totalWidth = 5; // Initial size
-    let totalHeight = 4; // Initial size
+    let totalHeight = 5; // Initial size
 
    // const totalArea = totalWidth * totalHeight;
-    const numberOfBoxes = 6;
+    const numberOfBoxes = 5;
     const texture = new THREE.TextureLoader().load(image);
     const spacingX = totalWidth / numberOfBoxes;
     const spacingY = totalHeight / numberOfBoxes;
@@ -37,11 +37,12 @@ const Land = () => {
       const indices = new Uint16Array([0, 1, 2, 0, 2, 3]);
       boxGeometry.setIndex(new THREE.BufferAttribute(indices, 1));
       boxGeometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
-
+      const originalColor = new THREE.Color(0X879474)
       const boxMaterial = new THREE.MeshBasicMaterial({
         //map: texture,
         transparent: true,
-        opacity: 0.3,
+        opacity: 0.5,
+        color: originalColor,
       });
 
       const flatBox = new THREE.Mesh(boxGeometry, boxMaterial);
@@ -52,14 +53,42 @@ const Land = () => {
         const flatBoxObject = {
           mesh: flatBox, // The THREE.Mesh instance
           name: block, // Custom name for the box
-          label: label, // Additional custom data
+          label: label,
+          isSelected: false// Additional custom data
         };
 
-      flatBox.userData.onClick = () => {
-        console.log('Box clicked!');
-        const message = `Box Name: ${flatBoxObject.name}\nAdditional Data: ${JSON.stringify(flatBoxObject.label)}`;
-        alert(message);
-      };
+ flatBox.userData.onClick = () => {
+    console.log('Box clicked!');
+    // Toggle selection
+    if (flatBoxObject.isSelected) {
+      unselectBlock(flatBoxObject);
+    } else {
+      selectBlock(flatBoxObject);
+    }
+  };
+
+   //Mouse enter handler to change color on hover
+  flatBox.userData.onMouseEnter = () => {
+    if (!flatBoxObject.isSelected) {
+      flatBox.material.color.set(originalColor); // Change color to red on hover
+    }
+  };
+
+
+  // Custom function to select a block
+    const selectBlock = (block) => {
+      block.isSelected = true;
+      block.mesh.material.color.set(0Xc8c8c8); // Change color to blue when selected
+    };
+
+    // Custom function to unselect a block
+    const unselectBlock = (block) => {
+      block.isSelected = false;
+      if (block.mesh.userData.onMouseEnter) {
+       block.mesh.userData.onMouseEnter();
+      }
+    };
+
     };
 
     // Create land geometry and apply texture
