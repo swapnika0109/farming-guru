@@ -25,7 +25,7 @@ const Land = () => {
     const spacingX = totalWidth / numberOfBoxes;
     const spacingY = totalHeight / numberOfBoxes;
 
-    const createFlatBox = (position, parent) => {
+    const createFlatBox = (position, parent, block, label) => {
       const boxGeometry = new THREE.BufferGeometry();
       const vertices = new Float32Array([
         -0.03, -0.02, 0, // bottom-left
@@ -48,8 +48,17 @@ const Land = () => {
       flatBox.position.copy(position);
       parent.add(flatBox);
 
+       // Create a flat box object with custom properties
+        const flatBoxObject = {
+          mesh: flatBox, // The THREE.Mesh instance
+          name: block, // Custom name for the box
+          label: label, // Additional custom data
+        };
+
       flatBox.userData.onClick = () => {
         console.log('Box clicked!');
+        const message = `Box Name: ${flatBoxObject.name}\nAdditional Data: ${JSON.stringify(flatBoxObject.label)}`;
+        alert(message);
       };
     };
 
@@ -69,7 +78,7 @@ const Land = () => {
           (j * spacingY - totalHeight / 2),
           0.07
         );
-        createFlatBox(position, land); // Pass the land as the parent
+        createFlatBox(position, land, i+j, 'SOLD'); // Pass the land as the parent
       }
     }
 
