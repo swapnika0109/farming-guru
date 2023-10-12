@@ -11,13 +11,13 @@ const Land = () => {
 
   useEffect(() => {
     scene.current = new THREE.Scene();
-    camera.current = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.9, 1000);
+    camera.current = new THREE.PerspectiveCamera(100, window.innerWidth / window.innerHeight, 0.9, 1000);
     renderer.current = new THREE.WebGLRenderer();
     renderer.current.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.current.domElement);
 
     let totalWidth = 5; // Initial size
-    let totalHeight = 7; // Initial size
+    let totalHeight = 5; // Initial size
 
     const totalArea = totalWidth * totalHeight;
     const numberOfBoxes = 6;
@@ -38,9 +38,9 @@ const Land = () => {
       boxGeometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
 
       const boxMaterial = new THREE.MeshBasicMaterial({
-        map: texture,
+        //map: texture,
         transparent: true,
-        opacity: 0.7,
+        opacity: 0.3,
       });
 
       const flatBox = new THREE.Mesh(boxGeometry, boxMaterial);
@@ -56,24 +56,10 @@ const Land = () => {
     const landGeometry = new THREE.PlaneGeometry(totalWidth + 0.2, totalHeight + 0.2, 2, 2);
     const landMaterial = new THREE.MeshBasicMaterial({ map: texture, transparent: true, opacity: 0.5 });
     const land = new THREE.Mesh(landGeometry, landMaterial);
+    land.rotation.set(0, 0, 0.9);
     scene.current.add(land);
 
-    let previousX = 0.0;
-    let previousY = 0.0;
 
-    // Calculate the positions for the flat boxes based on the land's dimensions
-//    for (let i = 0; i < numberOfBoxes; i++) {
-//      for (let j = 0; j < numberOfBoxes; j++) {
-//        const spacingX = totalWidth / numberOfBoxes;
-//        const spacingY = totalHeight / numberOfBoxes;
-//        const position = new THREE.Vector3(
-//          (i * spacingX - totalWidth / 2) + spacingX / 2,
-//          (j * spacingY - totalHeight / 2) + spacingY / 2,
-//          0.07
-//        );
-//        createFlatBox(position, land); // Pass the land as the parent
-//      }
-//    }
     for (let i = 0; i < numberOfBoxes; i++) {
       for (let j = 0; j < numberOfBoxes; j++) {
         const spacingX = totalWidth / numberOfBoxes;
@@ -94,6 +80,8 @@ const Land = () => {
     // Animation function
     const animate = () => {
       requestAnimationFrame(animate);
+      // Rotate the land
+      land.rotation.z += 0.002;
       renderer.current.render(scene.current, camera.current);
     };
 
