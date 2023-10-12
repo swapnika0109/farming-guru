@@ -17,7 +17,7 @@ const Land = () => {
     document.body.appendChild(renderer.current.domElement);
 
     let totalWidth = 5; // Initial size
-    let totalHeight = 5; // Initial size
+    let totalHeight = 10; // Initial size
 
     const totalArea = totalWidth * totalHeight;
     const numberOfBoxes = 6;
@@ -56,7 +56,7 @@ const Land = () => {
     const landGeometry = new THREE.PlaneGeometry(totalWidth + 0.4, totalHeight + 0.4, 2, 2);
     const landMaterial = new THREE.MeshBasicMaterial({ map: texture, transparent: true, opacity: 0.5 });
     const land = new THREE.Mesh(landGeometry, landMaterial);
-    land.rotation.set(0, 0, 0.9);
+    //land.rotation.set(0, 0, 0.9);
     scene.current.add(land);
 
 
@@ -65,8 +65,8 @@ const Land = () => {
         const spacingX = totalWidth / numberOfBoxes;
         const spacingY = totalHeight / numberOfBoxes;
         const position = new THREE.Vector3(
-          (i * spacingX - totalWidth / 2) + spacingX / 2 - totalWidth / (2 * numberOfBoxes),
-          (j * spacingY - totalHeight / 2) + spacingY / 2 - totalHeight / (2 * numberOfBoxes),
+          (i * spacingX - totalWidth / 2),
+          (j * spacingY - totalHeight / 2),
           0.07
         );
         createFlatBox(position, land); // Pass the land as the parent
@@ -81,7 +81,7 @@ const Land = () => {
     const animate = () => {
       requestAnimationFrame(animate);
       // Rotate the land
-      land.rotation.z += 0.002;
+      //land.rotation.z += 0.002;
       renderer.current.render(scene.current, camera.current);
     };
 
