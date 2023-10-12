@@ -17,20 +17,21 @@ const Land = () => {
     document.body.appendChild(renderer.current.domElement);
 
     let totalWidth = 5; // Initial size
-    let totalHeight = 10; // Initial size
+    let totalHeight = 4; // Initial size
 
-    const totalArea = totalWidth * totalHeight;
+   // const totalArea = totalWidth * totalHeight;
     const numberOfBoxes = 6;
-    const boxSize = Math.sqrt(totalArea / numberOfBoxes);
     const texture = new THREE.TextureLoader().load(image);
+    const spacingX = totalWidth / numberOfBoxes;
+    const spacingY = totalHeight / numberOfBoxes;
 
     const createFlatBox = (position, parent) => {
       const boxGeometry = new THREE.BufferGeometry();
       const vertices = new Float32Array([
         -0.03, -0.02, 0, // bottom-left
-        totalWidth / numberOfBoxes, -0.02, 0, // bottom-right
-        totalWidth / numberOfBoxes, totalHeight / numberOfBoxes, 0, // top-right
-        -0.03, totalHeight / numberOfBoxes, 0, // top-left
+        spacingX, -0.02, 0, // bottom-right
+        spacingX, spacingY, 0, // top-right
+        -0.03, spacingY, 0, // top-left
       ]);
 
       const indices = new Uint16Array([0, 1, 2, 0, 2, 3]);
@@ -62,8 +63,7 @@ const Land = () => {
 
     for (let i = 0; i < numberOfBoxes; i++) {
       for (let j = 0; j < numberOfBoxes; j++) {
-        const spacingX = totalWidth / numberOfBoxes;
-        const spacingY = totalHeight / numberOfBoxes;
+
         const position = new THREE.Vector3(
           (i * spacingX - totalWidth / 2),
           (j * spacingY - totalHeight / 2),
