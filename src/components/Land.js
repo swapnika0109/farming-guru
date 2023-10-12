@@ -53,7 +53,7 @@ const Land = () => {
     };
 
     // Create land geometry and apply texture
-    const landGeometry = new THREE.PlaneGeometry(totalWidth + 0.2, totalHeight + 0.2, 2, 2);
+    const landGeometry = new THREE.PlaneGeometry(totalWidth + 0.4, totalHeight + 0.4, 2, 2);
     const landMaterial = new THREE.MeshBasicMaterial({ map: texture, transparent: true, opacity: 0.5 });
     const land = new THREE.Mesh(landGeometry, landMaterial);
     land.rotation.set(0, 0, 0.9);
