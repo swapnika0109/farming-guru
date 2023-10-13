@@ -14,6 +14,7 @@ const Land = () => {
     scene.current = new THREE.Scene();
     camera.current = new THREE.PerspectiveCamera(100, window.innerWidth / window.innerHeight, 0.9, 1000);
     renderer.current = new THREE.WebGLRenderer();
+    renderer.current.setClearColor(0xFFFFFF)
     renderer.current.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.current.domElement);
 
