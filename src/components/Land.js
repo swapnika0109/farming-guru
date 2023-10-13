@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import image from '../assets/textures/land.jpg';
 
+
 const Land = () => {
   const scene = useRef(null);
   const camera = useRef(null);
@@ -22,6 +23,7 @@ const Land = () => {
    // const totalArea = totalWidth * totalHeight;
     const numberOfBoxes = 5;
     const texture = new THREE.TextureLoader().load(image);
+
     const spacingX = totalWidth / numberOfBoxes;
     const spacingY = totalHeight / numberOfBoxes;
 
@@ -34,20 +36,54 @@ const Land = () => {
         -0.03, spacingY, 0, // top-left
       ]);
 
+
       const indices = new Uint16Array([0, 1, 2, 0, 2, 3]);
       boxGeometry.setIndex(new THREE.BufferAttribute(indices, 1));
       boxGeometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
       const originalColor = new THREE.Color(0X879474)
       const boxMaterial = new THREE.MeshBasicMaterial({
-        //map: texture,
+        map: texture,
         transparent: true,
         opacity: 0.5,
         color: originalColor,
       });
 
-      const flatBox = new THREE.Mesh(boxGeometry, boxMaterial);
-      flatBox.position.copy(position);
-      parent.add(flatBox);
+  //const boxMaterial = new THREE.MeshBasicMaterial({ map: label === 'SOLD' ? texture1.current : texture.current });
+
+  const flatBox = new THREE.Mesh(boxGeometry, boxMaterial);
+  flatBox.position.copy(position);
+  parent.add(flatBox);
+
+
+    // Create a 2D canvas element for the text
+     const canvas = document.createElement('canvas');
+     const context = canvas.getContext('2d');
+     canvas.width = 129; // Adjust the width as needed
+     canvas.height = 64; // Adjust the height as needed
+     context.font = '18px Arial';
+     context.fillStyle = label === 'SOLD' ? 'red' : 'black';
+     context.textAlign = 'center'; // Center-align the text
+     context.textBaseline = 'middle'; // Vertically center-align the text
+     context.fillText(label, canvas.width / 2, canvas.height / 2); // Center-align the text
+
+     // Create a texture from the canvas
+     const canvasTexture = new THREE.CanvasTexture(canvas);
+     canvasTexture.minFilter = THREE.LinearFilter;
+
+     // Create a material with the canvas texture for the text
+     const textMaterial = new THREE.MeshBasicMaterial({ map: canvasTexture, transparent: true, side: THREE.DoubleSide });
+     const textGeometry = new THREE.PlaneGeometry(spacingX, spacingY);
+     const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+
+     // Position the text mesh on top of the flat box
+     textMesh.position.copy(new THREE.Vector3(
+                                      position.x + spacingX/2,
+                                      position.y + spacingY/2,
+                                      0.07
+                                    )); // Adjust the position
+     parent.add(textMesh);
+
+
 
        // Create a flat box object with custom properties
         const flatBoxObject = {
@@ -59,11 +95,13 @@ const Land = () => {
 
  flatBox.userData.onClick = () => {
     console.log('Box clicked!');
-    // Toggle selection
-    if (flatBoxObject.isSelected) {
-      unselectBlock(flatBoxObject);
-    } else {
-      selectBlock(flatBoxObject);
+    if( label !== 'SOLD'){
+        // Toggle selection
+        if (flatBoxObject.isSelected) {
+          unselectBlock(flatBoxObject);
+        } else {
+          selectBlock(flatBoxObject);
+        }
     }
   };
 
